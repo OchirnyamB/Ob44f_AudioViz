@@ -167,7 +167,8 @@ public class PlayerController implements Initializable {
     
     private void handleReady() {
         Duration duration = mediaPlayer.getTotalDuration();
-        lengthText.setText(duration.toString());
+        double lengthTime = Double.parseDouble(String.format("%.1f", duration.toMillis()));  // rounding 1 decimal place for the total length time
+        lengthText.setText(Double.toString(lengthTime) + " ms");
         Duration ct = mediaPlayer.getCurrentTime();
         currentText.setText(ct.toString());
         currentVisualizer.start(numBands, vizPane);
@@ -184,8 +185,8 @@ public class PlayerController implements Initializable {
     private void handleUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
         Duration ct = mediaPlayer.getCurrentTime();
         double ms = ct.toMillis();
-        int indexDot = Double.toString(ms).indexOf(".");
-        currentText.setText(Double.toString(ms).substring(0, indexDot+2));
+        double currentTime = Double.parseDouble(String.format("%.1f", ms));    // Using string format to round to one decimal value
+        currentText.setText(Double.toString(currentTime) + " ms");
         timeSlider.setValue(ms);
         currentVisualizer.update(timestamp, duration, magnitudes, phases);
     }
