@@ -16,6 +16,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Slider;
+import javafx.scene.input.DragEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
@@ -182,9 +184,9 @@ public class PlayerController implements Initializable {
     private void handleUpdate(double timestamp, double duration, float[] magnitudes, float[] phases) {
         Duration ct = mediaPlayer.getCurrentTime();
         double ms = ct.toMillis();
-        currentText.setText(Double.toString(ms));
+        int indexDot = Double.toString(ms).indexOf(".");
+        currentText.setText(Double.toString(ms).substring(0, indexDot+2));
         timeSlider.setValue(ms);
-        
         currentVisualizer.update(timestamp, duration, magnitudes, phases);
     }
     
@@ -217,5 +219,18 @@ public class PlayerController implements Initializable {
         if (mediaPlayer != null) {
            mediaPlayer.stop(); 
         }
+    }
+    @FXML
+    private void handleSliderPressed(MouseEvent event) {
+        if (mediaPlayer != null) {
+            mediaPlayer.pause();
+        } 
+    }
+    @FXML
+    private void handleSliderReleased(MouseEvent event) {
+        if (mediaPlayer != null) {
+            mediaPlayer.seek(Duration.millis(timeSlider.getValue()));
+            mediaPlayer.play();
+        } 
     }
 }
